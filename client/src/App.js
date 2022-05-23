@@ -1,28 +1,19 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/login";
+import SignUp from "./pages/signup";
+import MainPage from "./pages/mainpage";
 
 function App() {
-  const [todo, setTodo] = useState([]);
-
-  useEffect(() => {
-    fetchToDos();
-  }, []);
-
-  const fetchToDos = async () => {
-    const response = await fetch("http://localhost:4000/anggota");
-    const data = await response.json();
-    setTodo(data);
-  };
-
   return (
-    <div>
-      <div>ANGGOTA PERPUS:</div>
-      <div>
-        {todo.map((t) => (
-          <div key={t.id_anggota}>{t.nama_anggota}</div>
-        ))}
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/MainPage" element={<MainPage />} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/Login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
