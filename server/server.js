@@ -182,15 +182,13 @@ app.post("/pinjam", (req, res) => {
 // //router 5: Update status udah diambil
 app.put("/ambil", (req, res) => {
   db.query(
-    `UPDATE peminjaman SET status_pengembalian = 'Belum Dikembalikan' WHERE id_peminjaman = '${req.body.id_pinjam}'`,
+    `UPDATE peminjaman SET status_pengembalian = 'Belum Dikembalikan' WHERE id_peminjaman = '${req.body.id_peminjaman}'`,
     (err) => {
       if (err) {
         console.log(err);
         return;
       }
-      res.json(
-        `Data dengan id_peminjaman ${req.body.id_pinjam} telah mengambil buku`
-      );
+      res.json({ message: `Data terupdate` });
     }
   );
 });
@@ -198,15 +196,13 @@ app.put("/ambil", (req, res) => {
 // Router 6: Update status udah dikembaliin
 app.put("/kembali", (req, res) => {
   db.query(
-    `UPDATE peminjaman SET status_pengembalian = 'Sudah Dikembalikan' WHERE id_peminjaman = '${req.body.id_pinjam}'`,
+    `UPDATE peminjaman SET status_pengembalian = 'Sudah Dikembalikan' WHERE id_peminjaman = '${req.body.id_peminjaman}'`,
     (err) => {
       if (err) {
         console.log(err);
         return;
       }
-      res.json(
-        `Data dengan id_peminjaman ${req.body.id_pinjam} telah mengembalikan buku`
-      );
+      res.json({ message: `Data terupdate` });
     }
   );
 });
