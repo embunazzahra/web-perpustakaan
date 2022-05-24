@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "postcss-cli": "^9.1.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
@@ -20,7 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:css": "postcss src/input.css -o src/ouput.css",
+    "build:watch": "postcss src/input.css -o src/ouput.css --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -41,7 +44,7 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.7",
+    "autoprefixer": "^9.8.6",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.0.24"
   }

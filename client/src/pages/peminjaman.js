@@ -1,46 +1,28 @@
 import React, { useState, useEffect } from "react";
 
-const MainPage = () => {
-  const [listBuku, setListBuku] = useState([]);
+const PeminjamanPage = () => {
+  const [listPeminjaman, setListPeminjaman] = useState([]);
   const id_anggota = localStorage.getItem("id_anggota");
   console.log(localStorage.getItem("id_anggota"));
 
-  const getListBuku = async () => {
+  const getListPeminjaman = async () => {
+    const body = { id_anggota: id_anggota };
     try {
-      const response = await fetch("http://localhost:4000/buku");
-      const data = await response.json();
-
-      setListBuku(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const pinjamBuku = async (e, id_buku) => {
-    e.preventDefault();
-    const body = {
-      id_buku: id_buku,
-      id_anggota: id_anggota,
-    };
-    try {
-      const response = await fetch("http://localhost:4000/pinjam", {
+      const response = await fetch("http://localhost:4000/ListPeminjaman", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = await response.json();
-      if (data.message === `Data berhasil ditambahkan`) {
-        window.location = "/Peminjaman";
-      } else {
-        alert("something wrong");
-      }
+      const results = await response.json();
+      console.log(results);
+      setListPeminjaman(results);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    getListBuku();
+    getListPeminjaman();
   }, []);
 
   return (
@@ -51,7 +33,7 @@ const MainPage = () => {
       />
       <div className="flex items-center justify-center">
         <h1 className={`font-poppins text-7xl bg-red-200 mb-16 mt-16`}>
-          e-Library
+          Peminjamanku
         </h1>
       </div>
       <div className="container flex justify-center mx-auto">
@@ -61,66 +43,73 @@ const MainPage = () => {
               <table className="divide-y divide-gray-300 ">
                 <thead className="bg-gray-200">
                   <tr>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      ID
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      ID Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
                       Judul Buku
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      Kategori
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      Status Pengembalian
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      Pengarang
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      Tanggal Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      Penerbit
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      Tanggal Akhir Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      Tahun Terbit
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      Ganti Status
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
-                      Pinjam
+                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                      Delete
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-300">
-                  {listBuku.map((buku) => (
+                  {listPeminjaman.map((pinjam) => (
                     <tr className="whitespace-nowrap">
                       <td className="px-6 py-4 text-sm text-gray-500 font-poppins">
-                        {buku.id_buku}
+                        {pinjam.id_peminjaman}
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900 font-poppins">
-                          {buku.judul_buku}
+                          {pinjam.id_buku}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
-                          {buku.nama_kategori_buku}
+                          {pinjam.status_pengembalian}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
-                          {buku.id_pengarang}
+                          {pinjam.tanggal_peminjaman}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
-                          {buku.id_penerbit}
+                          {pinjam.tanggal_akhir_peminjaman}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 font-poppins">
-                        {new Date(buku.tahun_terbit).getFullYear()}
                       </td>
                       <td className="px-6 py-4">
                         <a
-                          key={buku.id_buku}
+                          key={pinjam.id_peminjaman}
                           href=""
-                          onClick={(e) => pinjamBuku(e, buku.id_buku)}
-                          className="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full font-poppins"
+                          //   onClick={(e) => pinjamBuku(e, buku.id_buku)}
+                          className="px-4 py-1 text-sm text-black bg-yellow-300 rounded-full font-poppins"
                         >
-                          Pinjam
+                          edit
+                        </a>
+                      </td>
+                      <td className="px-6 py-4">
+                        <a
+                          key={pinjam.id_peminjaman}
+                          href=""
+                          //   onClick={(e) => pinjamBuku(e, buku.id_buku)}
+                          className="px-4 py-1 text-sm text-white bg-red-500 rounded-full font-poppins"
+                        >
+                          hapus
                         </a>
                       </td>
                     </tr>
@@ -135,4 +124,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default PeminjamanPage;

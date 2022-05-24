@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function Copyright(props) {
   return (
@@ -38,18 +38,8 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //     const getLogin = async (e)=>{
-  //         e.preventDefault();
-
-  //     }
-
-  //   useEffect(()=>{
-  //       getLogin();
-  //   });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     console.log({ password });
     console.log({ username });
@@ -71,7 +61,8 @@ export default function Login() {
       const results = await response.json();
       console.log(results);
 
-      if (results.message == "berhasil login") {
+      if (results.message === "berhasil login") {
+        localStorage.setItem("id_anggota", results.id_anggota);
         window.location = "/MainPage";
       } else {
         alert(results.message);
@@ -93,7 +84,7 @@ export default function Login() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#5F9EA0" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -115,6 +106,7 @@ export default function Login() {
               //   autoComplete="email"
               autoFocus
               onChange={(e) => setUsername(e.target.value)}
+              color="success"
             />
             <TextField
               margin="normal"
@@ -126,6 +118,7 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
+              color="success"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -135,14 +128,14 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, bgcolor: "#008B8B" }}
             >
               Log In
             </Button>
             <Grid container>
               <Grid item xs></Grid>
               <Grid item>
-                <Link href="/SignUp" variant="body2">
+                <Link href="/SignUp" variant="body2" sx={{ color: "#008B8B" }}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

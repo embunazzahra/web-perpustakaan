@@ -84,7 +84,20 @@ router.post("/register", (req, res) => {
             error: err,
           });
         } else {
-          res.json({ username_anggota: req.body.username_anggota });
+          db.query(
+            `SELECT id_anggota FROM anggota WHERE username_anggota LIKE '${req.body.username_anggota}'`,
+            (err, hasil) => {
+              if (err) {
+                return res.status(500).json({
+                  error: err,
+                });
+              }
+              res.json({
+                message: "Registrasi berhasil!",
+                id_anggota: hasil.rows[0].id_anggota,
+              });
+            }
+          );
           console.log("Registrasi berhasil!");
         }
       });
@@ -100,7 +113,7 @@ router.post("/login", (req, res) => {
 
   //mengecek informasi yang dimasukkan user apakah terdaftar pada database
 
-  const query = `SELECT password FROM anggota WHERE username_anggota LIKE '${req.body.username_anggota}'`; //query ambil data user untuk login
+  const query = `SELECT id_anggota,password FROM anggota WHERE username_anggota LIKE '${req.body.username_anggota}'`; //query ambil data user untuk login
 
   db.query(query, (err, results) => {
     //tambahkan konfigurasi login di sini
@@ -127,7 +140,10 @@ router.post("/login", (req, res) => {
             console.log(`is match = ${isMatch}`);
 
             if (isMatch) {
-              res.json({ message: "berhasil login" });
+              res.json({
+                message: "berhasil login",
+                id_anggota: results.rows[0].id_anggota,
+              });
             } else {
               res.json({ message: "password salah" });
             }
@@ -158,9 +174,7 @@ app.post("/pinjam", (req, res) => {
         console.log(err);
         return;
       }
-      res.json(
-        `Data :'${req.body.id_buku}', '${req.body.id_anggota}' berhasil ditambahkan`
-      );
+      res.json({ message: `Data berhasil ditambahkan` });
     }
   );
 });
@@ -209,6 +223,20 @@ app.delete("/hapus", (req, res) => {
       res.json(
         `Data dengan id_peminjaman ${req.body.id_pinjam} berhasil dihapus`
       );
+    }
+  );
+});
+
+//sementara doang yah buat nyoba frontend
+app.post("/ListPeminjaman", (req, res) => {
+  db.query(
+    `SELECT * FROM peminjaman where id_anggota = '${req.body.id_anggota}'`,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.json(results.rows);
     }
   );
 });
