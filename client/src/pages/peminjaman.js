@@ -21,9 +21,32 @@ const PeminjamanPage = () => {
     }
   };
 
+  const deletePeminjaman = async (id_pinjam) => {
+    const body = { id_peminjaman: id_pinjam };
+    console.log(id_pinjam);
+    try {
+      const response = await fetch(`http://localhost:4000/hapus/${id_pinjam}`, {
+        method: "DELETE",
+        // headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify(body),
+      });
+      const results = await response.json();
+      console.log(results);
+      if (results.message === `Data berhasil dihapus`) {
+        setListPeminjaman(
+          listPeminjaman.filter(
+            (pinjam) => pinjam.pinjam.id_peminjaman !== id_pinjam
+          )
+        );
+      } else {
+        alert("Gagal dihapus");
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getListPeminjaman();
-  }, []);
+  }, [listPeminjaman]);
 
   return (
     <div>
@@ -103,14 +126,14 @@ const PeminjamanPage = () => {
                         </a>
                       </td>
                       <td className="px-6 py-4">
-                        <a
+                        <button
                           key={pinjam.id_peminjaman}
                           href=""
-                          //   onClick={(e) => pinjamBuku(e, buku.id_buku)}
+                          onClick={() => deletePeminjaman(pinjam.id_peminjaman)}
                           className="px-4 py-1 text-sm text-white bg-red-500 rounded-full font-poppins"
                         >
                           hapus
-                        </a>
+                        </button>
                       </td>
                     </tr>
                   ))}

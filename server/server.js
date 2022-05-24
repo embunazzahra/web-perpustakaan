@@ -212,17 +212,16 @@ app.put("/kembali", (req, res) => {
 });
 
 //Router 7: Delete jika tidak jadi
-app.delete("/hapus", (req, res) => {
+app.delete("/hapus/:id", (req, res) => {
   db.query(
-    `DELETE FROM peminjaman WHERE id_peminjaman = '${req.body.id_pinjam}'`,
+    `DELETE FROM peminjaman WHERE id_peminjaman = '${req.params.id}'`,
     (err) => {
       if (err) {
         console.log(err);
         return;
+      } else {
+        res.json({ message: `Data berhasil dihapus` });
       }
-      res.json(
-        `Data dengan id_peminjaman ${req.body.id_pinjam} berhasil dihapus`
-      );
     }
   );
 });
