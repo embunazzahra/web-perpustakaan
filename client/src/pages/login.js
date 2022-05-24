@@ -74,53 +74,11 @@ export default function Login() {
       if (results.message == "berhasil login") {
         window.location = "/MainPage";
       } else {
-        alert("pass/uname salah");
+        alert(results.message);
       }
     } catch (error) {
       console.error(error);
     }
-
-    // try {
-    //   const body = {
-    //     username_anggota: { username },
-    //     password: { password },
-    //   };
-
-    //   const response = await fetch("http://localhost:4000/login", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(body),
-    //   });
-
-    //   // console.log(response);
-    //   const results = await response.json();
-    //   setPassword(results);
-    //   console.log({ password });
-    // alert(results.data);
-    // alert(response.data);
-    // console.log(response.json);
-    // if (response.json === "done") {
-    //   alert("aaaa");
-    // }
-    //   if (response.status == 401) {
-    //     alert("password anda salah");
-    //   } else if (response.status == 500) {
-    //     alert(response.json);
-    //   }
-    //   console.log(response.json);
-
-    //   //   else {
-    //   //     window.location = "/MainPage";
-    //   //   }
-    //   console.log(response.body);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
-    // console.log({
-    //   email: data.get("username"),
-    //   password: data.get("password"),
-    // });
   };
 
   return (

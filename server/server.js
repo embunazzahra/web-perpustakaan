@@ -106,35 +106,34 @@ router.post("/login", (req, res) => {
     //tambahkan konfigurasi login di sini
     if (err) {
       console.error(err);
-      res.json({ message: "Username tidak ditemukan!" });
+      res.status(500).json({
+        error: err,
+      });
+
       return;
     } else {
-      bcrypt.compare(
-        temp.password,
-        results.rows[0].password,
-        (err, isMatch) => {
-          if (err) {
-            // return res.status(500).json({
-            //   error: err,
-            // });
-            res.json({ message: "error di hashing!" });
-          }
-          console.log(`is match = ${isMatch}`);
-          // res.json({ message: "wrongpass" });
+      if (results.rows.length == 0) {
+        res.json({ message: "Username tidak ditemukan!" });
+      } else {
+        bcrypt.compare(
+          temp.password,
+          results.rows[0].password,
+          (err, isMatch) => {
+            if (err) {
+              return res.status(500).json({
+                error: err,
+              });
+            }
+            console.log(`is match = ${isMatch}`);
 
-          if (isMatch) {
-            res.json({ message: "berhasil login" });
-            // res.json({ username_anggota: req.body.username_anggota });
-            // res.end("done");
-          } else {
-            res.json({ message: "pass salah" });
-            // res.status(401).json({
-            //   error: err,
-            // });
-            // res.json({ message: "wrongpass" });
+            if (isMatch) {
+              res.json({ message: "berhasil login" });
+            } else {
+              res.json({ message: "password salah" });
+            }
           }
-        }
-      );
+        );
+      }
     }
   });
 });
