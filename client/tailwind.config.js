@@ -6,6 +6,9 @@ module.exports = {
         signika: ["Signika", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
       },
+      colors: {
+        teal: "#5F9EA0",
+      },
     },
   },
   variants: {
