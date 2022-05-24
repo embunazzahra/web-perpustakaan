@@ -9,6 +9,7 @@ const router = express.Router();
 const { Client } = require("pg");
 const bcrypt = require("bcrypt");
 const { password } = require("pg/lib/defaults");
+const { response } = require("express");
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -105,7 +106,7 @@ router.post("/login", (req, res) => {
     //tambahkan konfigurasi login di sini
     if (err) {
       console.error(err);
-      res.send("Username tidak ditemukan!");
+      res.json({ message: "Username tidak ditemukan!" });
       return;
     } else {
       bcrypt.compare(
@@ -113,15 +114,24 @@ router.post("/login", (req, res) => {
         results.rows[0].password,
         (err, isMatch) => {
           if (err) {
-            return res.status(500).json({
-              error: err,
-            });
+            // return res.status(500).json({
+            //   error: err,
+            // });
+            res.json({ message: "error di hashing!" });
           }
           console.log(`is match = ${isMatch}`);
+          // res.json({ message: "wrongpass" });
+
           if (isMatch) {
-            res.json({ username_anggota: req.body.username_anggota });
+            res.json({ message: "berhasil login" });
+            // res.json({ username_anggota: req.body.username_anggota });
+            // res.end("done");
           } else {
-            res.json({ error: "password salah!" });
+            res.json({ message: "pass salah" });
+            // res.status(401).json({
+            //   error: err,
+            // });
+            // res.json({ message: "wrongpass" });
           }
         }
       );

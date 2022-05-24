@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState, useEffect } from "react";
 
 function Copyright(props) {
   return (
@@ -34,14 +35,92 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  //     const getLogin = async (e)=>{
+  //         e.preventDefault();
+
+  //     }
+
+  //   useEffect(()=>{
+  //       getLogin();
+  //   });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    console.log({
-      email: data.get("username"),
-      password: data.get("password"),
-    });
+    console.log({ password });
+    console.log({ username });
+
+    const body = {
+      username_anggota: username,
+      password: password,
+    };
+
+    console.log(body);
+
+    try {
+      const response = await fetch("http://localhost:4000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const results = await response.json();
+      console.log(results);
+
+      if (results.message == "berhasil login") {
+        window.location = "/MainPage";
+      } else {
+        alert("pass/uname salah");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // try {
+    //   const body = {
+    //     username_anggota: { username },
+    //     password: { password },
+    //   };
+
+    //   const response = await fetch("http://localhost:4000/login", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(body),
+    //   });
+
+    //   // console.log(response);
+    //   const results = await response.json();
+    //   setPassword(results);
+    //   console.log({ password });
+    // alert(results.data);
+    // alert(response.data);
+    // console.log(response.json);
+    // if (response.json === "done") {
+    //   alert("aaaa");
+    // }
+    //   if (response.status == 401) {
+    //     alert("password anda salah");
+    //   } else if (response.status == 500) {
+    //     alert(response.json);
+    //   }
+    //   console.log(response.json);
+
+    //   //   else {
+    //   //     window.location = "/MainPage";
+    //   //   }
+    //   console.log(response.body);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+
+    // console.log({
+    //   email: data.get("username"),
+    //   password: data.get("password"),
+    // });
   };
 
   return (
@@ -77,6 +156,7 @@ export default function Login() {
               name="username"
               //   autoComplete="email"
               autoFocus
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -87,6 +167,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
