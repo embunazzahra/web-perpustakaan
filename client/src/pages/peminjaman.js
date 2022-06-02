@@ -14,7 +14,7 @@ const Navbar = () => {
     <nav class="flex items-center justify-between flex-wrap bg-teal p-6 sticky top-0 z-50">
       <div class="flex items-center flex-no-shrink text-white mr-6">
         <MenuBookOutlinedIcon sx={{ fontSize: 40 }} />
-        <span class="font-semibold text-xl tracking-tight ml-4">e-Library</span>
+        <span class="font-semibold text-xl tracking-tight ml-4">DiG - Lib</span>
       </div>
       <div class="block lg:hidden">
         <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
@@ -134,9 +134,11 @@ const PeminjamanPage = () => {
           )
         );
       } else {
-        alert("Gagal dihapus");
+        alert("Gagal dihapus. Hanya bisa dihapus jika buku belum diambil.");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -156,31 +158,31 @@ const PeminjamanPage = () => {
         </h1>
       </div>
       <div className="container flex justify-center mx-auto">
-        <div className="flex flex-col">
-          <div className="w-full">
-            <div className="border-b border-gray-200 shadow">
+        <div className="flex flex-col justify-center w-full">
+          <div className="">
+            <div className="flex justify-center border-b border-gray-200 shadow">
               <table className="divide-y divide-gray-300 ">
                 <thead className="bg-gray-200">
                   <tr>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       ID Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Judul Buku
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Status Pengembalian
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Tanggal Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Tanggal Akhir Peminjaman
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Ganti Status
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-600 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-600 font-poppins">
                       Delete
                     </th>
                   </tr>
@@ -188,25 +190,25 @@ const PeminjamanPage = () => {
                 <tbody className="bg-white divide-y divide-gray-300">
                   {listPeminjaman.map((pinjam) => (
                     <tr className="whitespace-nowrap">
-                      <td className="px-6 py-4 text-sm text-gray-500 font-poppins">
+                      <td className="px-3 py-4 text-sm text-gray-500 font-poppins">
                         {pinjam.id_peminjaman}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-900 font-poppins">
-                          {pinjam.id_buku}
+                          {pinjam.judul_buku}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
                           {pinjam.status_pengembalian}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
                           {new Date(pinjam.tanggal_peminjaman).toLocaleString()}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
                           {new Date(
                             pinjam.tanggal_akhir_peminjaman
@@ -214,7 +216,7 @@ const PeminjamanPage = () => {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <button
                           class="bg-yellow-300 dropdown:block relative px-3 py-2 text-sm font-semibold leading-relaxed text-gray-800 transition-colors duration-150  border border-gray-300 rounded-lg focus:outline-none hover:border-gray-600 focus:shadow-outline focus:border-gray-900"
                           role="navigation"
@@ -255,7 +257,7 @@ const PeminjamanPage = () => {
                           </ul>
                         </button>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <button
                           key={pinjam.id_peminjaman}
                           href=""

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 
 const MainPage = () => {
@@ -8,6 +8,59 @@ const MainPage = () => {
   console.log(localStorage.getItem("id_anggota"));
 
   const navigate = useNavigate();
+
+  const Search = () => {
+    const [judulBuku, setJudulBuku] = useState("");
+
+    const getJudulBuku = async (e) => {
+      e.preventDefault();
+      const body = {
+        judul_buku: judulBuku,
+      };
+
+      try {
+        const response = await fetch("http://localhost:4000/cari", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        setListBuku(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return (
+      <div class="container flex justify-center items-center mb-7">
+        <div class="relative">
+          <div class="absolute top-4 left-3">
+            <i class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i>
+          </div>
+          <input
+            type="text"
+            class="h-14 w-96 pl-10 pr-20 rounded-lg z-0 focus:shadow focus:outline-none"
+            placeholder="Cari judul buku..."
+            onChange={(e) => setJudulBuku(e.target.value)}
+          />
+          <div class="absolute top-2 right-2">
+            <button
+              class="h-10 w-20 text-purple-700 rounded-lg bg-purple-200 hover:bg-purple-300"
+              onClick={(e) => {
+                if (judulBuku !== "") {
+                  getJudulBuku(e);
+                } else {
+                  window.location = "/MainPage";
+                }
+              }}
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const Navbar = () => {
     const logOut = () => {
@@ -19,7 +72,7 @@ const MainPage = () => {
         <div class="flex items-center flex-no-shrink text-white mr-6">
           <MenuBookOutlinedIcon sx={{ fontSize: 40 }} />
           <span class="font-semibold text-xl tracking-tight ml-4">
-            e-Library
+            DiG - Lib
           </span>
         </div>
         <div class="block lg:hidden">
@@ -110,35 +163,38 @@ const MainPage = () => {
       <Navbar />
       <div className="flex items-center justify-center">
         <h1 className={`font-poppins text-7xl bg-red-200 mb-16 mt-16`}>
-          e-Library
+          DiG - Lib
         </h1>
       </div>
+
+      <Search />
+
       <div className="container flex justify-center mx-auto">
-        <div className="flex flex-col">
-          <div className="w-full">
-            <div className="border-b border-gray-200 shadow">
-              <table className="divide-y divide-gray-300 ">
+        <div className="flex flex-col justify-center w-full">
+          <div className="">
+            <div className="flex justify-center border-b border-gray-200 shadow">
+              <table className="divide-y divide-gray-300">
                 <thead className="bg-gray-200">
                   <tr>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       ID
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Judul Buku
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Kategori
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Pengarang
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Penerbit
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Tahun Terbit
                     </th>
-                    <th className="px-6 py-2 text-xs text-gray-500 font-poppins">
+                    <th className="px-3 py-2 text-xs text-gray-500 font-poppins">
                       Pinjam
                     </th>
                   </tr>
@@ -146,33 +202,55 @@ const MainPage = () => {
                 <tbody className="bg-white divide-y divide-gray-300">
                   {listBuku.map((buku) => (
                     <tr className="whitespace-nowrap">
-                      <td className="px-6 py-4 text-sm text-gray-500 font-poppins">
+                      <td className="px-3 py-4 text-sm text-gray-500 font-poppins">
                         {buku.id_buku}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-900 font-poppins">
                           {buku.judul_buku}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <div className="text-sm text-gray-500 font-poppins">
                           {buku.nama_kategori_buku}
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500 font-poppins">
-                          {buku.id_pengarang}
-                        </div>
+                      <td className="px-3 py-4">
+                        <a
+                          key={`id'${buku.id_buku}'`}
+                          href=""
+                          onClick={() => {
+                            navigate("/Pengarang", {
+                              state: {
+                                id_pengarang: buku.id_pengarang,
+                              },
+                            });
+                          }}
+                          className={`text-orange-700 bg-orange-200 px-4 py-1 text-sm rounded-full font-poppins`}
+                        >
+                          {buku.nama_pengarang}
+                        </a>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500 font-poppins">
-                          {buku.id_penerbit}
-                        </div>
+                      <td className="px-3 py-4">
+                        <a
+                          key={`id-'${buku.id_buku}'`}
+                          href=""
+                          onClick={() => {
+                            navigate("/Penerbit", {
+                              state: {
+                                id_penerbit: buku.id_penerbit,
+                              },
+                            });
+                          }}
+                          className={`text-lime-800 bg-lime-200 px-4 py-1 text-sm rounded-full font-poppins`}
+                        >
+                          {buku.nama_penerbit}
+                        </a>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 font-poppins">
+                      <td className="px-3 py-4 text-sm text-gray-500 font-poppins">
                         {new Date(buku.tahun_terbit).getFullYear()}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         <a
                           key={buku.id_buku}
                           href=""

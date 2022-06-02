@@ -66,7 +66,7 @@ export default function SignUp() {
         localStorage.setItem("id_anggota", results.id_anggota);
         window.location = "/MainPage";
       } else {
-        alert(results);
+        alert(results.message);
       }
     } catch (error) {
       console.error(error);
@@ -75,7 +75,15 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          backgroundColor: "#F5F5DC",
+          paddingBottom: 1,
+          borderRadius: 10,
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
@@ -165,7 +173,15 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: "#008B8B" }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: "#008B8B",
+                "&:hover": {
+                  backgroundColor: "#4DB6AC",
+                  color: "black",
+                },
+              }}
             >
               Sign Up
             </Button>

@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
+import { hover } from "@testing-library/user-event/dist/hover";
+import { bgcolor } from "@mui/system";
 
 function Copyright(props) {
   return (
@@ -74,17 +76,25 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          backgroundColor: "#F5F5DC",
+          paddingBottom: 1,
+          borderRadius: 10,
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "#5F9EA0" }}>
+          <Avatar sx={{ m: 2, bgcolor: "#5F9EA0" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -128,7 +138,15 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: "#008B8B" }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: "#008B8B",
+                "&:hover": {
+                  backgroundColor: "#4DB6AC",
+                  color: "black",
+                },
+              }}
             >
               Log In
             </Button>
