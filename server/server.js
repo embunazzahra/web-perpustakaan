@@ -67,6 +67,26 @@ router.post("/register", (req, res) => {
   temp = req.session;
   temp.username = req.body.username_anggota;
   temp.password = req.body.password;
+  const {
+    nama_anggota,
+    alamat_anggota,
+    no_hp_anggota,
+    username_anggota,
+    password,
+  } = req.body;
+
+  console.log(req.body);
+  if (
+    nama_anggota == "" ||
+    alamat_anggota == "" ||
+    no_hp_anggota == "" ||
+    username_anggota == "" ||
+    password == ""
+  ) {
+    return res.status(400).json({
+      message: "data harus lengkap.",
+    });
+  }
 
   //melakukan registrasi user baru ke dalam database
   //melakukan konfigurasi bycrpty di sini
@@ -80,7 +100,7 @@ router.post("/register", (req, res) => {
 		VALUES ('${req.body.nama_anggota}','${req.body.alamat_anggota}','${req.body.no_hp_anggota}','${req.body.username_anggota}', '${hash}')`;
       db.query(query, (err, results) => {
         if (err) {
-          return res.status(500).json({
+          return res.status(400).json({
             error: err,
           });
         } else {
@@ -98,7 +118,6 @@ router.post("/register", (req, res) => {
               });
             }
           );
-          console.log("Registrasi berhasil!");
         }
       });
     }
@@ -156,13 +175,16 @@ router.post("/login", (req, res) => {
 
 //router 3: Get semua informasi buku
 app.get("/buku", (req, res) => {
-  db.query(`SELECT * FROM buku`, (err, results) => {
-    if (err) {
-      console.log(err);
-      return;
+  db.query(
+    `SELECT * FROM tabel_buku where id_buku NOT IN (select peminjaman.id_buku from peminjaman where peminjaman.status_pengembalian = 'Belum Dikembalikan' )`,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.json(results.rows);
     }
-    res.json(results.rows);
-  });
+  );
 });
 
 //router 4: Post tabel peminjaman buat minjam nentuin tanggal (seminggu)
@@ -210,11 +232,16 @@ app.put("/kembali", (req, res) => {
 //Router 7: Delete jika tidak jadi
 app.delete("/hapus/:id", (req, res) => {
   db.query(
-    `DELETE FROM peminjaman WHERE id_peminjaman = '${req.params.id}'`,
-    (err) => {
+    `DELETE FROM peminjaman WHERE id_peminjaman = '${req.params.id}' AND status_pengembalian = 'Belum Diambil'`,
+    (err, results) => {
       if (err) {
         console.log(err);
         return;
+      }
+      if (results.rowCount == 0) {
+        res.json({
+          message: `Data tidak berhasil dihapus, buku sudah diambil`,
+        });
       } else {
         res.json({ message: `Data berhasil dihapus` });
       }
@@ -222,10 +249,54 @@ app.delete("/hapus/:id", (req, res) => {
   );
 });
 
-//sementara doang yah buat nyoba frontend
+//Router 8: Menampilkan list peminjaman tiap orang
 app.post("/ListPeminjaman", (req, res) => {
   db.query(
-    `SELECT * FROM peminjaman where id_anggota = '${req.body.id_anggota}'`,
+    `SELECT peminjaman.id_peminjaman, peminjaman.id_buku, buku.judul_buku, peminjaman.id_anggota, anggota.nama_anggota, peminjaman.tanggal_peminjaman, 
+	peminjaman.tanggal_akhir_peminjaman, peminjaman.status_pengembalian FROM peminjaman, buku, anggota 
+	WHERE peminjaman.id_buku = buku.id_buku AND anggota.id_anggota = '${req.body.id_anggota}' AND anggota.id_anggota = peminjaman.id_anggota`,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.json(results.rows);
+    }
+  );
+});
+
+//Router 9: List penerbit pengarang per id
+app.post("/pengarang", (req, res) => {
+  db.query(
+    `SELECT * FROM pengarang where id_pengarang = '${req.body.id_pengarang}'`,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.json(results.rows);
+    }
+  );
+});
+
+//Router 10: List penerbit penerbit per id
+app.post("/penerbit", (req, res) => {
+  db.query(
+    `SELECT * FROM penerbit where id_penerbit = '${req.body.id_penerbit}'`,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.json(results.rows);
+    }
+  );
+});
+
+//Router 11: cari
+app.post("/cari", (req, res) => {
+  db.query(
+    `SELECT * FROM tabel_buku where UPPER(judul_buku) like UPPER('%${req.body.judul_buku}%') `,
     (err, results) => {
       if (err) {
         console.log(err);
